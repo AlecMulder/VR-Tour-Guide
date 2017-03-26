@@ -12,15 +12,10 @@ using System.Collections;
 //for all users.
 public class VideoTransmitter : MonoBehaviour {
 
-
-	public void LoadScene (string destination) {
-			PhotonNetwork.Instantiate(destination, Vector3.zero, Quaternion.identity, 0);
-	}
-
-	public void LoadScene (string destination, int id) {
-		Vector3 message =  new Vector3 (id,0,0);
-		PhotonNetwork.Instantiate(destination, message, Quaternion.identity, 0);
-		Debug.Log(id + " Load Scene " + destination + message);
+	public void LoadScene (int video, int id) {
+		Vector3 message =  new Vector3 (id,video,0);
+		PhotonNetwork.Instantiate("VideoMessage", message, Quaternion.identity, 0);
+		Debug.Log("Load video " + message);
 	}
 
 	public void Play (){
