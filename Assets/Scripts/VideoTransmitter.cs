@@ -48,11 +48,4 @@ public class VideoTransmitter : MonoBehaviour {
 		Debug.Log(id + " Pause");
 	}
 
-	public void Next (){
-		PhotonNetwork.Instantiate("Next", Vector3.zero, Quaternion.identity, 0);
-	}
-
-	public void Previous (){
-		PhotonNetwork.Instantiate("Previous", Vector3.zero, Quaternion.identity, 0);
-	}
 }

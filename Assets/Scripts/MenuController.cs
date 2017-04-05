@@ -21,29 +21,16 @@ public class MenuController : MonoBehaviour {
 
 	public GameObject PlayButton, PauseButton, StopButton;
 
-	//Hopefully I end up using this for something big, right now it just keeps
+	//Hopefully I end up using this for something big, right now it just keeps track
 	//of who's already been added to the MainPanel
-	private List<PhotonPlayer> playerList = new List<PhotonPlayer>();
+	private List<PhotonPlayer> player_list = new List<PhotonPlayer>();
 
 	void Start(){
 
 	}
-
-	//This method is run once every frame. It checks if new devices have joined
-	//and updates the menu accordingly.
+	//This method is run once every frame.
 	void Update(){
-
-		if(PhotonNetwork.otherPlayers.Length != 0){
-			foreach (PhotonPlayer player in PhotonNetwork.otherPlayers){
-				if (playerList.Exists(x => x == player)){
-
-				}
-				else{
-					playerList.Add(player);
-					AddUserButton(player);
-				}
-			}
-		}/*
+/*
 		//Check if any of the users have paused their apps
 		//It would likely indicate their headset has been taken off
 		if(GameObject.Find("Paused(Clone)") != null){
@@ -71,18 +58,78 @@ public class MenuController : MonoBehaviour {
 			Destroy(GameObject.Find("Paused(Clone)"));
 		}*/
 	}
+	void OnPhotonPlayerConnected(PhotonPlayer new_player){
+		Debug.Log("Somebody connected");
+		foreach (PhotonPlayer player in PhotonNetwork.otherPlayers){
+			//If player is already in player_list
+			if (player_list.Exists(x => x == player)){
+
+			}
+			else{
+				player_list.Add(player);
+				AddUserButton(player);
+			}
+		}
+	}
+	void OnPhotonPlayerDisconnected(PhotonPlayer explayer){
+		Debug.Log("Somebody disconnected");
+		foreach (PhotonPlayer player in player_list){
+			if (Array.Exists(PhotonNetwork.otherPlayers, x => x == player)){
+
+			}
+			else{
+				player_list.Remove(player);
+				RemoveUserButton(player);
+			}
+		}
+	}
 	//This method adds a button for each player detected. It then adds a listener
 	//function to the button.
 	void AddUserButton(PhotonPlayer player){
-			GameObject user_button = (GameObject)Instantiate(UserButton);
-			//Adds a button representing the user to the main panel
-			user_button.transform.SetParent(UserListPanel, false);
-			//Sets the text of that user to it's id#
-			Text IDText = user_button.transform.Find("TextPlayerID").GetComponent<Text>();
-			IDText.text = player.ID.ToString();
-			user_button.name = player.ID.ToString();
-			Button tempButton = user_button.GetComponent<Button>();
-			tempButton.onClick.AddListener(() => SingleUserButtonClicked(player));
+		Debug.Log("So they get a button");
+		GameObject user_button = (GameObject)Instantiate(UserButton);
+		//Adds a button representing the user to the main panel
+		user_button.transform.SetParent(UserListPanel, false);
+		//Sets the text of that user to it's id#
+		Text IDText = user_button.transform.Find("TextPlayerID").GetComponent<Text>();
+		IDText.text = player.ID.ToString();
+		user_button.name = player.ID.ToString();
+		Button tempButton = user_button.GetComponent<Button>();
+		tempButton.onClick.AddListener(() => SingleUserButtonClicked(player));
+	}
+	//Turns the button on the main page that represents the player that left the
+	//game red, waits, then removes it and closes the page that represents that player.
+	void RemoveUserButton(PhotonPlayer player){
+		Debug.Log("So their button is going away");
+		BackToMenu();
+		foreach (Transform user_button in UserListPanel)
+    {
+			if(player.ID.ToString() == user_button.name){
+				StartCoroutine(TurnRedWaitDestroy(user_button));
+			}
+    }
+	}
+	//
+	private IEnumerator TurnRedWaitDestroy(Transform user_button){
+    print(Time.time);
+		user_button.GetComponent<Image>().color = Color.red;
+    yield return new WaitForSecondsRealtime(5);
+		Destroy(user_button.gameObject);
+    print(Time.time);
+  }
+	//Deactivates all and single user panels and activates the main panel
+	public void BackToMenu(){
+		MainPanel.SetActive(true);
+		AllUsersPanel.SetActive(false);
+		SingleUserPanel.SetActive(false);
+	}
+	//Hides the main panel and reveals the panel that controls all users
+	public void AllUsersButtonClicked(){
+		MainPanel.SetActive(false);
+		AllUsersPanel.SetActive(true);
+	}
+	void LaunchVideoClick(){
+
 	}
 	//This method hides the main panel and reveals and makes ready the panel for
 	//each user
@@ -150,17 +197,6 @@ public class MenuController : MonoBehaviour {
 		tempButtonPause.onClick.AddListener(() => video_transmitter.Pause(id));
 		Button tempButtonStop = StopButton.GetComponent<Button>();
 		tempButtonStop.onClick.AddListener(() => video_transmitter.Stop(id));
-	}
-	//Hides the main panel and reveals the panel that controls all users
-	public void AllUsersButtonClicked(){
-		MainPanel.SetActive(false);
-		AllUsersPanel.SetActive(true);
-	}
-	//Deactivates all and single user panels and activates the main panel
-	public void BackToMenu(){
-		MainPanel.SetActive(true);
-		AllUsersPanel.SetActive(false);
-		SingleUserPanel.SetActive(false);
 	}
 
 }
