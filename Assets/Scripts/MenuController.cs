@@ -113,10 +113,18 @@ public class MenuController : MonoBehaviour {
 	private IEnumerator TurnRedWaitDestroy(Transform user_button){
     print(Time.time);
 		user_button.GetComponent<Image>().color = Color.red;
-    yield return new WaitForSecondsRealtime(5);
+		yield return StartCoroutine(WaitForRealSeconds(5));
 		Destroy(user_button.gameObject);
     print(Time.time);
   }
+	private static IEnumerator WaitForRealSeconds(float time)
+{
+		float start = Time.realtimeSinceStartup;
+		while (Time.realtimeSinceStartup < start + time)
+		{
+				yield return null;
+		}
+}
 	//Deactivates all and single user panels and activates the main panel
 	public void BackToMenu(){
 		MainPanel.SetActive(true);
