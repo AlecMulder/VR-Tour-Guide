@@ -16,43 +16,28 @@ public class VideoTransmitter : MonoBehaviour {
 		Vector3 message =  new Vector3 (id,video,0);
 		PhotonNetwork.Instantiate("VideoMessage", message, Quaternion.identity, 0);
 		Destroy(GameObject.Find("VideoMessage(Clone)"));
-		Debug.Log("Load video " + message);
-	}
-
-	public void Play (){
-		PhotonNetwork.Instantiate("Play", Vector3.zero, Quaternion.identity, 0);
-		Destroy(GameObject.Find("Play(Clone)"));
+		Debug.Log("Player" + id + "Load video " + message);
 	}
 
 	public void Play (int id){
 		Vector3 message =  new Vector3 (id,0,0);
 		PhotonNetwork.Instantiate("Play", message, Quaternion.identity, 0);
 		Destroy(GameObject.Find("Play(Clone)"));
-		Debug.Log(id + " Play");
-	}
-
-	public void Stop (){
-		PhotonNetwork.Instantiate("Stop", Vector3.zero, Quaternion.identity, 0);
-		Destroy(GameObject.Find("Stop(Clone)"));
+		Debug.Log("Player" + id + " Play");
 	}
 
 	public void Stop (int id){
 		Vector3 message =  new Vector3 (id,0,0);
 		PhotonNetwork.Instantiate("Stop", message, Quaternion.identity, 0);
-		Destroy(GameObject.Find("(Clone)"));
-		Debug.Log(id + " Stop");
-	}
-
-	public void Pause (){
-		PhotonNetwork.Instantiate("Pause", Vector3.zero, Quaternion.identity, 0);
-		Destroy(GameObject.Find("Pause(Clone)"));
+		Destroy(GameObject.Find("Stop(Clone)"));
+		Debug.Log("Player" + id + " Stop");
 	}
 
 	public void Pause (int id){
 		Vector3 message =  new Vector3 (id,0,0);
 		PhotonNetwork.Instantiate("Pause", message, Quaternion.identity, 0);
 		Destroy(GameObject.Find("Pause(Clone)"));
-		Debug.Log(id + " Pause");
+		Debug.Log("Player" + id + " Pause");
 	}
 
 }
