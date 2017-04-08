@@ -71,7 +71,8 @@ public class MenuController : MonoBehaviour {
 	//game red, waits, then removes it and closes the page that represents that player.
 	void RemoveUserButton(PhotonPlayer player){
 		Debug.Log("So their button is going away");
-		BackToMenu();
+		Text TitleText = UserPanel.transform.Find("TitleText").GetComponent<Text>();
+		if(player.ID.ToString() == TitleText.text) BackToMenu();
 		foreach (Transform user_button in UserListPanel)
     {
 			if(player.ID.ToString() == user_button.name){
