@@ -4,14 +4,17 @@ using UnityEngine.UI;
 
 public class NetworkController : MonoBehaviour{
 	string _room = "VR Tourism";
-	public Text PlayersText;
+	public Text main_status_text;
+	public Text user_status_text;
+
 
 	void Start(){
 		PhotonNetwork.ConnectUsingSettings("0.1");
 	}
 
 	void OnJoinedLobby(){
-		PlayersText.text = "Connected";
+		main_status_text.text = "Connected";
+		user_status_text.text = "Connected";
 		Debug.Log("joined lobby");
 		RoomOptions roomOptions = new RoomOptions() { };
 		PhotonNetwork.JoinOrCreateRoom(_room, roomOptions, TypedLobby.Default);
@@ -21,6 +24,8 @@ public class NetworkController : MonoBehaviour{
 	}
 
 	void OnConnectionFail(){
-		PlayersText.text = "Connection lost, restart app";
+		Debug.Log("Connection lost");
+		main_status_text.text = "Connection lost, restart app";
+		user_status_text.text = "Connection lost, restart app";
 	}
 }

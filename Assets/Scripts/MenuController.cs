@@ -12,6 +12,7 @@ public class MenuController : MonoBehaviour {
 	public GameObject LaunchButton, VideoInputField;
 	public GameObject PlayButton, PauseButton, BackButton;
 	public RectTransform  UserListPanel, VideoPanel;
+	public Text UserTitleText;
 
 
 	//Hopefully I end up using this for something big, right now it just keeps track
@@ -84,6 +85,7 @@ public class MenuController : MonoBehaviour {
 	//the button
 	private IEnumerator TurnRedWaitDestroy(Transform user_button){
 		user_button.GetComponent<Image>().color = Color.red;
+		user_button.GetComponent<Button>().interactable = false;
 		yield return StartCoroutine(WaitForRealSeconds(5));
 		Destroy(user_button.gameObject);
   }
@@ -103,13 +105,11 @@ public class MenuController : MonoBehaviour {
 	public void UserButtonClicked(int id){
 		MainPanel.SetActive(false);
 		UserPanel.SetActive(true);
-		//int id = int.Parse(player.ID.ToString());
 		Debug.Log ("Button clicked = " + id);
-		Text TitleText = UserPanel.transform.Find("TitleText").GetComponent<Text>();
 		if(id == 0) {
-			TitleText.text = "All Players";
+			UserTitleText.text = "All Players";
 		}else{
-			TitleText.text = id.ToString();
+			UserTitleText.text = id.ToString();
 		}
 
 		VideoTransmitter video_transmitter = new VideoTransmitter();

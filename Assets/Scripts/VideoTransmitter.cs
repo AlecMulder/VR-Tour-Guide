@@ -26,13 +26,6 @@ public class VideoTransmitter : MonoBehaviour {
 		Debug.Log("Player" + id + " Play");
 	}
 
-	public void Stop (int id){
-		Vector3 message =  new Vector3 (id,0,0);
-		PhotonNetwork.Instantiate("Stop", message, Quaternion.identity, 0);
-		Destroy(GameObject.Find("Stop(Clone)"));
-		Debug.Log("Player" + id + " Stop");
-	}
-
 	public void Pause (int id){
 		Vector3 message =  new Vector3 (id,0,0);
 		PhotonNetwork.Instantiate("Pause", message, Quaternion.identity, 0);
