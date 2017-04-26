@@ -1,7 +1,11 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
-//
+
+//This file contains functions that deal with sending streams of data between
+//all the players in the lobby. I halfway implemented reading the time each
+//tourist was at in their video, but it was unreliable if the app lost focus or
+//the phone locked.
 public class StatusReceiver : Photon.MonoBehaviour {
 	public GameObject UserListPanel;
 

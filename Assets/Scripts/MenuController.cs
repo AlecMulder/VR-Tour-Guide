@@ -4,8 +4,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System;
 using System.Collections.Generic;
-//This file controls functions related to the main menu, including functions
-//that load videos
+//This file contains functions that control the ui of the app, as well as some
+//functions necessary to know when players connect and disconnect.
 
 public class MenuController : MonoBehaviour {
 	public GameObject MainPanel, UserPanel, UserButton;
@@ -14,9 +14,8 @@ public class MenuController : MonoBehaviour {
 	public RectTransform  UserListPanel, VideoPanel;
 	public Text UserTitleText;
 
-
-	//Hopefully I end up using this for something big, right now it just keeps track
-	//of who's already been added to the MainPanel
+	//Right now this just keeps track of who's already been added to the MainPanel
+	//so they are only added once. Not fully implemented, candidate for removal.
 	private List<PhotonPlayer> player_list = new List<PhotonPlayer>();
 
 	//This method is run when the object the script is attached to is instantiated
@@ -24,10 +23,17 @@ public class MenuController : MonoBehaviour {
 	void Start(){
 
 	}
+
 	//This method is run once every frame.
 	void Update(){
 
 	}
+	//Called whenever a player joins the lobby.
+	//BUG: this is called when a tour guide joins the lobby as well as when a
+	//BUG: tourist joins the lobby. This results in the tour guide being given a
+	//BUG: button, which could be confusing for end users. Not urgent though
+	//BUG: because it's unlikely that two people will be using tour guide at the
+	//BUG: same time
 	void OnPhotonPlayerConnected(PhotonPlayer new_player){
 		Debug.Log("Somebody connected");
 		foreach (PhotonPlayer player in PhotonNetwork.otherPlayers){
@@ -41,6 +47,7 @@ public class MenuController : MonoBehaviour {
 			}
 		}
 	}
+
 	//This method adds a button for each player detected. It then adds a listener
 	//function to the button.
 	void AddUserButton(PhotonPlayer player){
@@ -56,6 +63,7 @@ public class MenuController : MonoBehaviour {
 		Button tempButton = user_button.GetComponent<Button>();
 		tempButton.onClick.AddListener(() => UserButtonClicked(id));
 	}
+
 	void OnPhotonPlayerDisconnected(PhotonPlayer explayer){
 		Debug.Log("Somebody disconnected");
 		foreach (PhotonPlayer player in player_list){
@@ -68,6 +76,7 @@ public class MenuController : MonoBehaviour {
 			}
 		}
 	}
+
 	//Turns the button on the main page that represents the player that left the
 	//game red, waits, then removes it and closes the page that represents that player.
 	void RemoveUserButton(PhotonPlayer player){
@@ -81,6 +90,7 @@ public class MenuController : MonoBehaviour {
 			}
     }
 	}
+
 	//Called by RemoveUserButton(), turns a button red for 5 seconds, then deletes
 	//the button
 	private IEnumerator TurnRedWaitDestroy(Transform user_button){
@@ -89,19 +99,22 @@ public class MenuController : MonoBehaviour {
 		yield return StartCoroutine(WaitForRealSeconds(5));
 		Destroy(user_button.gameObject);
   }
+	//This is a hack required to ensure that the button actually stays red for 5s
 	private static IEnumerator WaitForRealSeconds(float time){
 		float start = Time.realtimeSinceStartup;
 		while (Time.realtimeSinceStartup < start + time){
 				yield return null;
 		}
 	}
+
 	//Deactivates all and single user panels and activates the main panel
 	public void BackToMenu(){
 		MainPanel.SetActive(true);
 		UserPanel.SetActive(false);
 	}
+
 	//This method hides the main panel and reveals and makes ready the panel for
-	//each user
+	//each user by assigning values to all of the labels and buttons
 	public void UserButtonClicked(int id){
 		MainPanel.SetActive(false);
 		UserPanel.SetActive(true);
@@ -122,7 +135,8 @@ public class MenuController : MonoBehaviour {
 		temp_pause_button.onClick.AddListener(() => video_transmitter.Pause(id));
 
 	}
-
+	//This is activated by the big launch button on the user panel. It checks the
+	//value of the field and launches the specified video.
 	public void LaunchButtonClicked(int id){
 		VideoTransmitter video_transmitter = new VideoTransmitter();
 		Text video_input_text = VideoInputField.transform.Find("Text").GetComponent<Text>();

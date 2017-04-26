@@ -2,7 +2,11 @@
 using System.Collections;
 using UnityEngine.UI;
 
+//This file contains functions that control the initial networking.
+//T
 public class NetworkController : MonoBehaviour{
+	//Note that in order for a tourist and tour leader to communicate, they must
+	//be in the same room.
 	string _room = "VR Tourism";
 	public Text main_status_text;
 	public Text user_status_text;

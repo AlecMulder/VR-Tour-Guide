@@ -10,6 +10,8 @@ using System.Collections;
 //of the Vector3 is equal to their id after casting it from float to int.
 //If it does or if it is 0 they will act on it, 0 representing a message intended
 //for all users.
+//Note that in order for an object to be instantiated over the network, a prefab
+//needs to be in the Resources foleder on both tourist and tour leader.
 public class VideoTransmitter : MonoBehaviour {
 
 	public void LoadScene (int video, int id) {
